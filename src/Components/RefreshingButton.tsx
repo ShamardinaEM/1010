@@ -8,7 +8,7 @@ export default function RefreshingButton  ({ onClick, disabled }: RefreshFigures
     <button 
       onClick={onClick}
       disabled={disabled}
-      className="refresh-button"
+      className="game-button refresh-button"
     >
       Обновить фигуры
     </button>

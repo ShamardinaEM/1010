@@ -9,14 +9,14 @@ export default function MainMenu({ onStart }: MainMenuProps) {
       <table>
         <tr>
           <td>
-            <button onClick={() => onStart(false)} className="start-button">
+            <button onClick={() => onStart(false)} className="game-button">
               Свободная игра
             </button>
           </td>
         </tr>
         <tr>
           <td>
-            <button onClick={() => onStart(true)} className="time-game-button">
+            <button onClick={() => onStart(true)} className="game-button">
               Игра на время
             </button>
           </td>

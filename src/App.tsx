@@ -34,12 +34,12 @@ export default function App() {
             <table>
               <tr>
                 <td>
-                  <button onClick={restartGame}>Новая игра</button>
+                  <button className="game-button newgame-button" onClick={restartGame}>Новая игра</button>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <button onClick={() => setIsPlaying(false)}>
+                  <button className="game-button" onClick={() => setIsPlaying(false)}>
                     Главное меню
                   </button>
                 </td>

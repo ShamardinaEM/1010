@@ -31,7 +31,7 @@ export default function Header({ currentScore, onReturnToMenu }: HeaderProps) {
   }, [currentScore, record, updateRecord]);
 
   return (
-    <header className="container">
+    <header>
       <span className="logo">1010!</span>
       <nav>
         <ul>

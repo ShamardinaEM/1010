@@ -185,7 +185,7 @@ export default function Game({
             <h2>Счет: {currentScore}</h2>
           </td>
           <td className="restart-butt" rowSpan={2}>
-            <button className="restart-but" onClick={restartGame}>
+            <button className="game-button" onClick={restartGame}>
               Новая игра
             </button>
           </td>
