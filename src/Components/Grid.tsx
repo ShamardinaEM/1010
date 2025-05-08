@@ -1,10 +1,12 @@
+import { memo } from "react";
+
 interface GridProps {
   grid: number[][];
   onDropFigure: (row: number, col: number, figureIndex: number, figure: number[][]) => void;
   figures: { shape: number[][]; color: string }[];
 }
 
-export default function Grid({ grid, onDropFigure, figures }: GridProps) {
+const Grid = memo(function Grid({ grid, onDropFigure, figures }: GridProps) {
   const handleDrop = (e: React.DragEvent, targetRow: number, targetCol: number) => {
     const figureIndex = parseInt(e.dataTransfer.getData("figure-index"));
     const offsetRow = parseInt(e.dataTransfer.getData("offset-row"));
@@ -30,4 +32,6 @@ export default function Grid({ grid, onDropFigure, figures }: GridProps) {
       )}
     </div>
   );
-}
+});
+
+export default Grid;

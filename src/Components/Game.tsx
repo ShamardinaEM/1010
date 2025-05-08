@@ -1,5 +1,6 @@
 import { generateRandomFigures, GRID_SIZE, createEmptyGrid } from "./constants";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useImmer } from "use-immer";
 import Timer from "./Timerr";
 import NextFigure from "./NextFigure";
 import RefreshingButton from "./RefreshingButton";
@@ -19,7 +20,7 @@ export default function Game({
   currentScore,
   isTimedMode,
 }: GameProps) {
-  const [grid, setGrid] = useState(createEmptyGrid());
+  const [grid, updateGrid] = useImmer<number[][]>(createEmptyGrid()); //используем immer для изменения grid
   const [availableFigures, setAvailableFigures] = useState(
     generateRandomFigures()
   );
@@ -31,7 +32,7 @@ export default function Game({
   const [timerResetKey, setTimerResetKey] = useState(0);
   const [refreshCount, setRefreshCount] = useState(0);
 
-  const canPlaceFigure = (
+  const canPlaceFigure = useCallback((
     row: number,
     col: number,
     figure: number[][]
@@ -50,9 +51,9 @@ export default function Game({
       }
     }
     return true;
-  };
+  }, [grid]);
 
-  const canPlaceAnyFigure = (): boolean => {
+  const canPlaceAnyFigure = useCallback((): boolean => {
     return availableFigures.some((figure) => {
       for (let row = 0; row < GRID_SIZE; row++) {
         for (let col = 0; col < GRID_SIZE; col++) {
@@ -63,16 +64,48 @@ export default function Game({
       }
       return false;
     });
-  };
+  }, [availableFigures, canPlaceFigure]);
 
   useEffect(() => {
     if (!canPlaceAnyFigure()) {
       setIsGameOver(true);
       onGameOver();
     }
-  }, [grid, availableFigures]);
+  }, [grid, availableFigures, canPlaceAnyFigure, onGameOver]);
 
-  const placeFigure = (
+  const checkAndClearLines = useCallback((): number => {
+    let cleared = 0;
+
+    updateGrid((draft: number[][]) => {
+      for (let row = 0; row < GRID_SIZE; row++) {
+        if (draft[row].every((cell: number) => cell === 1)) {
+          cleared++;
+          draft[row] = Array(GRID_SIZE).fill(0);
+        }
+      }
+
+      for (let col = 0; col < GRID_SIZE; col++) {
+        let isColumnFull = true;
+        for (let row = 0; row < GRID_SIZE; row++) {
+          if (draft[row][col] !== 1) {
+            isColumnFull = false;
+            break;
+          }
+        }
+        if (isColumnFull) {
+          cleared++;
+          for (let row = 0; row < GRID_SIZE; row++) {
+            draft[row][col] = 0;
+          }
+        }
+      }
+    });
+
+    const bonusScore = cleared * 10;
+    return bonusScore;
+  }, [updateGrid]);
+
+  const placeFigure = useCallback((
     row: number,
     col: number,
     figureIndex: number,
@@ -80,24 +113,23 @@ export default function Game({
   ) => {
     if (!canPlaceFigure(row, col, figure)) return false;
 
-    const newGrid = grid.map((r) => [...r]);
     let cellsPlaced = 0;
 
-    for (let i = 0; i < figure.length; i++) {
-      for (let j = 0; j < figure[i].length; j++) {
-        if (figure[i][j] === 1) {
-          newGrid[row + i][col + j] = 1;
-          cellsPlaced++;
+    updateGrid((draft: number[][]) => {
+      for (let i = 0; i < figure.length; i++) {
+        for (let j = 0; j < figure[i].length; j++) {
+          if (figure[i][j] === 1) {
+            draft[row + i][col + j] = 1;
+            cellsPlaced++;
+          }
         }
       }
-    }
-
-    setGrid(newGrid);
+    });
 
     const newScoreAfterPlacement = currentScore + cellsPlaced;
     onScoreUpdate(newScoreAfterPlacement);
 
-    const bonusScore = checkAndClearLines(newGrid);
+    const bonusScore = checkAndClearLines();
     const finalScore = newScoreAfterPlacement + bonusScore;
     onScoreUpdate(finalScore);
 
@@ -114,43 +146,14 @@ export default function Game({
     }
 
     return true;
-  };
-
-  const checkAndClearLines = (newGrid: number[][]): number => {
-    let updatedGrid = [...newGrid.map((r) => [...r])];
-    let cleared = 0;
-
-    for (let row = 0; row < GRID_SIZE; row++) {
-      if (updatedGrid[row].every((cell) => cell === 1)) {
-        cleared++;
-        updatedGrid[row] = Array(GRID_SIZE).fill(0);
-      }
-    }
-
-    for (let col = 0; col < GRID_SIZE; col++) {
-      let isColumnFull = true;
-      for (let row = 0; row < GRID_SIZE; row++) {
-        if (updatedGrid[row][col] !== 1) {
-          isColumnFull = false;
-          break;
-        }
-      }
-      if (isColumnFull) {
-        cleared++;
-        for (let row = 0; row < GRID_SIZE; row++) {
-          updatedGrid[row][col] = 0;
-        }
-      }
-    }
-
-    setGrid(updatedGrid);
-
-    const bonusScore = cleared * 10;
-    return bonusScore;
-  };
+  }, [
+    canPlaceFigure,
+    availableFigures,
+    updateGrid,
+  ]);
 
   const restartGame = () => {
-    setGrid(createEmptyGrid());
+    updateGrid(() => createEmptyGrid());
     setAvailableFigures(generateRandomFigures());
     onScoreUpdate(0);
     setIsGameOver(false);
