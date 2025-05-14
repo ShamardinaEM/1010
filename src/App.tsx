@@ -50,7 +50,6 @@ export default function App() {
           <Game
             onGameOver={() => setIsGameOver(true)}
             onScoreUpdate={(newScore) => setScore(newScore)}
-            currentScore={score}
             isTimedMode={isTimedMode}
           />
         )
