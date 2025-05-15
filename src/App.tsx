@@ -32,18 +32,28 @@ export default function App() {
             <h1>Игра окончена!</h1>
             <h2>Счет: {score}</h2>
             <table>
-              <tr>
-                <td>
-                  <button className="game-button newgame-button" onClick={restartGame}>Новая игра</button>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <button className="game-button" onClick={() => setIsPlaying(false)}>
-                    Главное меню
-                  </button>
-                </td>
-              </tr>
+              <tbody>
+                <tr>
+                  <td>
+                    <button
+                      className="game-button newgame-button"
+                      onClick={restartGame}
+                    >
+                      Новая игра
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <button
+                      className="game-button"
+                      onClick={() => setIsPlaying(false)}
+                    >
+                      Главное меню
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </div>
         ) : (

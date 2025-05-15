@@ -1,4 +1,5 @@
 export const GRID_SIZE = 10;
+export const MAX_REFRESHES = 3;
 
 export const createEmptyGrid = () => Array.from({length: GRID_SIZE}, () => Array(GRID_SIZE).fill(0));
 

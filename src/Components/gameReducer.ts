@@ -1,7 +1,9 @@
-import { generateRandomFigures } from "./constants";
-
-export const GRID_SIZE = 10;
-export const MAX_REFRESHES = 3;
+import {
+  generateRandomFigures,
+  createEmptyGrid,
+  GRID_SIZE,
+  MAX_REFRESHES,
+} from "./constants";
 
 export interface FigureData {
   shape: number[][];
@@ -19,7 +21,14 @@ export interface GameState {
 }
 
 export type GameAction =
-  | { type: "PLACE_FIGURE"; payload: { row: number; col: number; figureIndex: number; figure: number[][] } }
+  | {
+      type: "PLACE_FIGURE";
+      payload: {
+        row: number;
+        col: number;
+        figure: number[][];
+      };
+    }
   | { type: "UPDATE_GRID"; payload: number[][] }
   | { type: "UPDATE_SCORE"; payload: number }
   | { type: "UPDATE_FIGURES"; payload: FigureData[] }
@@ -29,11 +38,8 @@ export type GameAction =
   | { type: "RESTART_GAME" }
   | { type: "GAME_OVER" };
 
-export const generateEmptyGrid = (): number[][] =>
-  Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(0));
-
 export const initialState: GameState = {
-  grid: generateEmptyGrid(),
+  grid: createEmptyGrid(),
   availableFigures: generateRandomFigures(3),
   nextFigure: generateRandomFigures(1)[0],
   refreshCount: 0,
@@ -42,38 +48,41 @@ export const initialState: GameState = {
   timerResetKey: 0,
 };
 
-function placeFigureOnGrid(grid: number[][], row: number, col: number, figure: number[][]): number[][] {
-  console.log('Placing figure:', { row, col, figure });
-  console.log('Current grid:', grid);
-  
-  const newGrid = JSON.parse(JSON.stringify(grid));
-  
+function placeFigureOnGrid(
+  grid: number[][],
+  row: number,
+  col: number,
+  figure: number[][]
+): number[][] {
+  const newGrid = grid.map((row) => [...row]);
+
   for (let i = 0; i < figure.length; i++) {
     for (let j = 0; j < figure[i].length; j++) {
       if (figure[i][j] === 1) {
         const newRow = row + i;
         const newCol = col + j;
-        if (newRow < GRID_SIZE && newCol < GRID_SIZE) {
+        if (
+          newRow >= 0 &&
+          newRow < GRID_SIZE &&
+          newCol >= 0 &&
+          newCol < GRID_SIZE
+        ) {
           newGrid[newRow][newCol] = 1;
         }
       }
     }
   }
-  
-  console.log('New grid after placement:', newGrid);
+
   return newGrid;
 }
 
 export function gameReducer(state: GameState, action: GameAction): GameState {
-  console.log('Reducer action:', action);
-  console.log('Current state:', state);
-
   switch (action.type) {
     case "PLACE_FIGURE": {
       const { row, col, figure } = action.payload;
-      
+
       const newGrid = placeFigureOnGrid(state.grid, row, col, figure);
-      
+
       const newState = {
         ...state,
         grid: newGrid,
