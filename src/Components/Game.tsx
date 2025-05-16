@@ -19,7 +19,15 @@ export default function Game({
   isTimedMode,
 }: GameProps) {
   const [state, dispatch] = useReducer(gameReducer, initialState);
-  const { grid, availableFigures, isGameOver, nextFigure, timerResetKey, refreshCount, score } = state;
+  let {
+    grid,
+    availableFigures,
+    isGameOver,
+    nextFigure,
+    timerResetKey,
+    refreshCount,
+    score,
+  } = state;
 
   const canPlaceFigure = useCallback(
     (row: number, col: number, figure: number[][]): boolean => {
@@ -62,7 +70,7 @@ export default function Game({
   ): boolean => {
     if (!canPlaceFigure(row, col, figure)) return false;
 
-    const newGrid = grid.map(row => [...row]);
+    const newGrid = grid.map((row) => [...row]);
     for (let i = 0; i < figure.length; i++) {
       for (let j = 0; j < figure[i].length; j++) {
         if (figure[i][j] === 1) {
@@ -70,18 +78,18 @@ export default function Game({
         }
       }
     }
-  
+
     let cleared = 0;
-  
+
     for (let r = 0; r < GRID_SIZE; r++) {
-      if (newGrid[r].every(cell => cell === 1)) {
+      if (newGrid[r].every((cell) => cell === 1)) {
         newGrid[r] = Array(GRID_SIZE).fill(0);
         cleared++;
       }
     }
 
     for (let c = 0; c < GRID_SIZE; c++) {
-      const isFullCol = newGrid.every(row => row[c] === 1);
+      const isFullCol = newGrid.every((row) => row[c] === 1);
       if (isFullCol) {
         for (let r = 0; r < GRID_SIZE; r++) {
           newGrid[r][c] = 0;
@@ -90,29 +98,32 @@ export default function Game({
       }
     }
 
-    let newScore = score + figure.flat().filter(cell => cell === 1).length;
+    let newScore = score + figure.flat().filter((cell) => cell === 1).length;
     newScore += cleared * 10;
 
     dispatch({ type: "UPDATE_GRID", payload: newGrid });
     dispatch({ type: "UPDATE_SCORE", payload: newScore });
     onScoreUpdate(newScore);
-  
+
     const updatedFigures = [...availableFigures];
     updatedFigures[figureIndex] = nextFigure;
     dispatch({ type: "UPDATE_FIGURES", payload: updatedFigures });
-    dispatch({ type: "UPDATE_NEXT_FIGURE", payload: generateRandomFigures(1)[0] });
-  
+    dispatch({
+      type: "UPDATE_NEXT_FIGURE",
+      payload: generateRandomFigures(1)[0],
+    });
+
     if (isTimedMode) {
       dispatch({ type: "RESET_TIMER" });
     }
-  
+
     return true;
   };
-  
 
   const restartGame = () => {
     dispatch({ type: "RESTART_GAME" });
     onScoreUpdate(0);
+    refreshAllFigures();
   };
 
   const refreshAllFigures = () => {
@@ -144,10 +155,14 @@ export default function Game({
                 isTimedMode={isTimedMode}
                 outOfTime={handleOutOfTime}
               />
+              <h3>Режим: {isTimedMode ? "На время" : "Свободный"}</h3>
               <h2>Счёт: {score}</h2>
             </td>
-            <td rowSpan={2} className="restart-butt">
-              <button className="game-button" onClick={restartGame}>
+            <td rowSpan={2}>
+              <button
+                className="game-button restart-butt"
+                onClick={restartGame}
+              >
                 Новая игра
               </button>
             </td>
@@ -161,33 +176,19 @@ export default function Game({
           onDropFigure={placeFigure}
           figures={availableFigures}
         />
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                <NextFigure
-                  nextFigure={nextFigure}
-                  onNextFigureGenerated={(figure) =>
-                    dispatch({ type: "UPDATE_NEXT_FIGURE", payload: figure })
-                  }
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <RefreshingButton
-                  onClick={refreshAllFigures}
-                  disabled={isGameOver}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <p>Осталось обновлений: {3 - refreshCount}</p>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        
+        <div className="special">
+          <NextFigure
+            nextFigure={nextFigure}
+            onNextFigureGenerated={(figure) =>
+              dispatch({ type: "UPDATE_NEXT_FIGURE", payload: figure })
+            }
+          />
+
+          <RefreshingButton onClick={refreshAllFigures} disabled={isGameOver} />
+
+          <p>Осталось обновлений: {3 - refreshCount}</p>
+        </div>
       </div>
 
       <div className="figures-grid">

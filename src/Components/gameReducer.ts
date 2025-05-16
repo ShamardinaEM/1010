@@ -136,6 +136,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return {
         ...initialState,
         timerResetKey: state.timerResetKey + 1,
+        refreshCount: state.refreshCount > 2 ? 0: -1,
       };
 
     case "GAME_OVER":
