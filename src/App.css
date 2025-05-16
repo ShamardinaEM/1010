@@ -4,7 +4,7 @@
 
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #343a40;
+  background-color: #394550;
   color: #fff;
   display: flex;
   justify-content: center;
@@ -54,11 +54,11 @@ nav ul {
   padding: 10px 0;
   margin: 0 5vw;
   color: #fff;
-  font-size: 2.5vw;
+  font-size: 2vw;
 }
 
 nav ul li {
-  margin-top: 20px;
+  margin-top: 30px;
   text-align: center;
 }
 
@@ -143,9 +143,8 @@ h1 {
 .figures-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
   margin-top: 40px;
-  margin-left: -80px;
+  margin-left: -120px;
 }
 
 .figure-cell {
@@ -170,6 +169,8 @@ h1 {
 
 .figure-row {
   display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .spec {
@@ -181,12 +182,19 @@ h1 {
 }
 
 .next-figure {
-  width: 50px;
-  min-height: 260px;
+  width: 200px;
+  min-height: 300px;
+}
+
+.special {
+  text-align: center;
+  display: grid;
+  grid-row: span;
 }
 
 .game-container {
-  margin-top: 100px;
+  margin-top: 80px;
+  padding: 0;
 }
 
 .refresh-button {
@@ -200,7 +208,9 @@ h1 {
 }
 
 .restart-butt {
-  padding-left: 120px;
+  margin-left: 50px;
+  width: 280px;
+  height: 70px;
 }
 
 .game-over-screen {
@@ -225,14 +235,15 @@ h1 {
   }
 
   nav ul li {
-    margin-top: 5px;
+    margin-left: 15px;
+    margin-top: 1px;
     font-size: 20px;
   }
 
   nav ul li button {
     font-size: 20px;
-    width: 120%;
-    height: 100%;
+    width: 130px;
+    height: 50px;
     margin-top: 0px;
   }
 
@@ -240,6 +251,11 @@ h1 {
     flex-direction: column;
     align-items: center;
     padding: 0 10px;
+  }
+
+  .figure-row {
+    flex-direction: none;
+    flex-wrap: nowrap;
   }
 
   .spec {
@@ -301,7 +317,7 @@ h1 {
     max-width: 250px;
     font-size: 20px;
     height: 60px;
-    margin-top: -20px;
+    margin-top: -10px;
   }
 
   .game-over-screen h1 {
