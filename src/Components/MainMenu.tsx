@@ -5,22 +5,23 @@ interface MainMenuProps {
 export default function MainMenu({ onStart }: MainMenuProps) {
   return (
     <div className="main-menu">
-      <h1>1010!</h1>
       <table>
-        <tr>
-          <td>
-            <button onClick={() => onStart(false)} className="game-button">
-              Свободная игра
-            </button>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <button onClick={() => onStart(true)} className="game-button">
-              Игра на время
-            </button>
-          </td>
-        </tr>
+        <tbody>
+          <tr>
+            <td>
+              <button onClick={() => onStart(false)} className="game-button">
+                Свободная игра
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <button onClick={() => onStart(true)} className="game-button">
+                Игра на время
+              </button>
+            </td>
+          </tr>
+        </tbody>
       </table>
     </div>
   );

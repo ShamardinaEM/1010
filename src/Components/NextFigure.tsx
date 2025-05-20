@@ -16,7 +16,7 @@ export default function NextFigure({ onNextFigureGenerated, nextFigure }: NextFi
   return (
     <div className="next-figure">
         <h2>Следующая фигура:</h2>
-      {nextFigure && <Figure figure={nextFigure.shape} color={nextFigure.color} index={-1} isPrev={true}/>}
+      <div className="nextFigure">{nextFigure && <Figure figure={nextFigure.shape} color={nextFigure.color} index={-1} isPrev={true}/>}</div>
     </div>
   );
 }

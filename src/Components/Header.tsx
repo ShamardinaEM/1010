@@ -32,7 +32,7 @@ export default function Header({ currentScore, onReturnToMenu }: HeaderProps) {
 
   return (
     <header>
-      <span className="logo">1010!</span>
+      <p className="logo">1010!</p>
       <nav>
         <ul>
           <li className="record">Рекорд: {record}</li>

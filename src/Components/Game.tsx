@@ -158,7 +158,7 @@ export default function Game({
               <h3>Режим: {isTimedMode ? "На время" : "Свободный"}</h3>
               <h2>Счёт: {score}</h2>
             </td>
-            <td rowSpan={2}>
+            <td>
               <button
                 className="game-button restart-butt"
                 onClick={restartGame}
